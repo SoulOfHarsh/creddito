@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Your Identity</title>
+  <link rel="stylesheet" href="/static/css/fill_out.css">
+</head>
+<body>
+  <header>
+    <div class="nav-bar">
+        <img src="/static/image/whitelogo.png" alt="Logo" class="logo">
+        <a href="/homepage" class="nav-link">HOME</a>
+        <a href="/apply" class="nav-link">APPLY</a>
+        <a href="/order" class="nav-link">ORDER</a>
+        <a href="/about" class="nav-link">ABOUT US</a>
+        <button class="toggle-btn" id="toggle-btn">☰ </button>
+    </div>
+  </header>
+
+  <div class="back-button-container">
+    <a href="/information" class="back-btn">Back</a>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <button class="close-sidebar" id="close-btn">✖</button>
+  <div class="profile">
+      <img src="/static/image/account.png" alt="Profile Avatar">
+      <span class="phone-number" id="phone-number">Phone Number</span>
+  </div>
+  <div class="menu">
+      <!-- Personal Information -->
+      <a href="/personal_info" class="menu-link">
+          <img src="/static/image/personal_info.png" alt="Personal Info Icon" class="menu-icon">
+          Personal Information
+      </a>
+
+      <!-- Loan History -->
+      <a href="/loan_history" class="menu-link">
+          <img src="/static/image/history.png" alt="Loan History Icon" class="menu-icon">
+          Loan History
+      </a>
+
+      <!-- Privacy Policy -->
+      <a href="/privacy_policy" class="menu-link">
+          <img src="/static/image/policy.png" alt="Privacy Policy Icon" class="menu-icon">
+          Privacy Policy
+      </a>
+  </div>
+  <div class="logout">
+      <img src="/static/image/logout.png" alt="Logout Icon" class="menu-icon">
+      Log Out
+  </div>
+</div>
+
+<script>
+      // Sidebar toggle functionality
+      const toggleBtn = document.getElementById('toggle-btn');
+      const sidebar = document.getElementById('sidebar');
+      const closeBtn = document.getElementById('close-btn');
+
+      // Open/Close Sidebar
+      toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active'); // Toggle active class
+          toggleBtn.textContent = sidebar.classList.contains('active') ? "✖" : "☰"; // Toggle button text
+      });
+
+      // Close Sidebar
+      closeBtn.addEventListener('click', () => {
+          sidebar.classList.remove('active');
+          toggleBtn.textContent = "☰";
+      });
+
+      // Display phone number dynamically
+      const urlParams = new URLSearchParams(window.location.search);
+      const phone = urlParams.get('phone');
+
+      if (phone) {
+          document.getElementById('phone-number').textContent = `Phone Number: ${phone}`;
+      }
+</script>
+
+<main>
+  <div class="back-button">&larr; Back</div>
+  <div class="verify-section">
+    <h1>Verify Your Identity <span class="check-icon">✔</span></h1>
+    <p>To proceed with your loan application, we need to verify your identity. Please upload a valid government-issued ID to help us confirm your identity securely.</p>
+  </div>
+
+  <div class="form-header">
+      <h1>Fill out the information below to proceed.</h1>
+  </div>
+<main>
+  <div class="form-container">
+    <form id="identityForm">
+      <label for="fullName">Full Name (First, Middle, Last)</label>
+      <input type="text" id="fullName" name="fullName" required>
+  
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob" required>
+  
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender" required>
+        <option value="" disabled selected></option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+  
+      <label for="maritalStatus">Marital Status</label>
+      <select id="maritalStatus" name="maritalStatus" required>
+        <option value="" disabled selected></option>
+        <option value="single">Single</option>
+        <option value="married">Married</option>
+        <option value="separated">Separated</option>
+        <option value="widowed">Widowed</option>
+      </select>
+  
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" required>
+  
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required>
+  
+      <label for="employment">Employment Information</label>
+      <select id="employment" name="employment" required>
+        <option value="" disabled selected></option>
+        <option value="employed">Employed</option>
+        <option value="unemployed">Unemployed</option>
+        <option value="student">Student</option>
+      </select>
+  
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+  </div>
+</main>
+
+<script>
+  const form = document.getElementById('identityForm');
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const formData = {
+      fullName: document.getElementById('fullName').value,
+      dob: document.getElementById('dob').value,
+      gender: document.getElementById('gender').value,
+      maritalStatus: document.getElementById('maritalStatus').value,
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value,
+      employment: document.getElementById('employment').value,
+    };
+
+    // Save data to localStorage
+    localStorage.setItem('personalInfo', JSON.stringify(formData));
+
+    // Redirect to personal_info.html
+    window.location.href = '/personal_info';
+  });
+</script>
+
+      <footer class="footer">
+        <div class="footer-content">
+            <p>SMART <span class="highlight">LOANS</span>, SIMPLE <span class="highlight">SOLUTIONS</span></p>
+            <p>&copy; 2024 Creddito. All rights reserved.</p>
+        </div>
+    </footer>
+  </main>
+</body>
+</html>

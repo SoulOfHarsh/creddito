@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Information</title>
+  <link rel="stylesheet" href="/static/css/personal_info.css">
+</head>
+<body>
+  <header>
+    <div class="nav-bar">
+      <img src="/static/image/whitelogo.png" alt="Logo" class="logo">
+
+      {% if not logged_in %}
+          <a href="/homepage" class="nav-link">HOME</a>
+          <a href="/apply" class="nav-link">APPLY</a>
+          <a href="/login" class="nav-link">LOGIN</a>
+          <a href="/about" class="nav-link">ABOUT US</a>
+      {% else %}
+          <a href="/homepage" class="nav-link">HOME</a>
+          <a href="/order" class="nav-link">ORDER</a>
+          <a href="/about" class="nav-link">ABOUT US</a>
+          <button class="toggle-btn" id="toggle-btn">☰ </button>
+      {% endif %}
+    </div>
+  </header>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <button class="close-sidebar" id="close-btn">✖</button>
+  <div class="profile">
+      <img src="/static/image/account.png" alt="Profile Avatar">
+      <span class="phone-number" id="phone-number">Phone Number</span>
+  </div>
+  <div class="menu">
+      <!-- Personal Information -->
+      <a href="/personal_info" class="menu-link">
+          <img src="/static/image/personal_info.png" alt="Personal Info Icon" class="menu-icon">
+          Personal Information
+      </a>
+
+      <!-- Loan History -->
+      <a href="/loan_history" class="menu-link">
+          <img src="/static/image/history.png" alt="Loan History Icon" class="menu-icon">
+          Loan History
+      </a>
+
+      <!-- Privacy Policy -->
+      <a href="/privacy_policy" class="menu-link">
+          <img src="/static/image/policy.png" alt="Privacy Policy Icon" class="menu-icon">
+          Privacy Policy
+      </a>
+  </div>
+  <div class="logout">
+      <img src="/static/image/logout.png" alt="Logout Icon" class="menu-icon">
+      Log Out
+  </div>
+</div>
+
+<script>
+      // Sidebar toggle functionality
+      const toggleBtn = document.getElementById('toggle-btn');
+      const sidebar = document.getElementById('sidebar');
+      const closeBtn = document.getElementById('close-btn');
+
+      // Open/Close Sidebar
+      toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active'); // Toggle active class
+          toggleBtn.textContent = sidebar.classList.contains('active') ? "✖" : "☰"; // Toggle button text
+      });
+
+      // Close Sidebar
+      closeBtn.addEventListener('click', () => {
+          sidebar.classList.remove('active');
+          toggleBtn.textContent = "☰";
+      });
+
+      // Display phone number dynamically
+      const urlParams = new URLSearchParams(window.location.search);
+      const phone = urlParams.get('phone');
+
+      if (phone) {
+          document.getElementById('phone-number').textContent = `Phone Number: ${phone}`;
+      }
+</script>
+
+  <main>
+    <div class="info-container">
+      <div class="info-header">
+        <h1>Personal Information</h1>
+      </div>
+      <div class="info-content">
+        <div class="info-row">
+          <span class="label">Full Name</span>
+          <span class="value" id="fullName"></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Date of Birth</span>
+          <span class="value" id="dob"></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Gender</span>
+          <span class="value" id="gender"></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Marital Status</span>
+          <span class="value" id="maritalStatus"></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Phone Number</span>
+          <span class="value" id="phone"></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Email Address</span>
+          <span class="value" id="email"></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Employment Information</span>
+          <span class="value" id="employment"></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Fetch data from localStorage
+    const personalInfo = JSON.parse(localStorage.getItem('personalInfo'));
+
+    if (personalInfo) {
+      document.getElementById('fullName').textContent = personalInfo.fullName;
+      document.getElementById('dob').textContent = personalInfo.dob;
+      document.getElementById('gender').textContent = personalInfo.gender;
+      document.getElementById('maritalStatus').textContent = personalInfo.maritalStatus;
+      document.getElementById('phone').textContent = personalInfo.phone;
+      document.getElementById('email').textContent = personalInfo.email;
+      document.getElementById('employment').textContent = personalInfo.employment;
+    }
+  </script>
+
+<footer class="footer">
+  <div class="footer-content">
+      <p>SMART <span class="highlight">LOANS</span>, SIMPLE <span class="highlight">SOLUTIONS</span></p>
+      <p>&copy; 2024 Creddito. All rights reserved.</p>
+  </div>
+</footer>
+</body>
+</html>

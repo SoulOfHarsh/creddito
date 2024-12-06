@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Order</title> 
+    <link rel="stylesheet" href="/static/css/order.css">
+</head>
+<body>
+    <div class="nav-bar">
+        <img src="/static/image/whitelogo.png" alt="Logo" class="logo">
+        {% if not logged_in %}
+            <a href="/homepage" class="nav-link">HOME</a>
+            <a href="/apply" class="nav-link">APPLY</a>
+            <a href="/login" class="nav-link">LOGIN</a>
+        {% else %}
+            <a href="/homepage" class="nav-link">HOME</a>
+            <a href="/about" class="nav-link">ABOUT US</a>
+            <button class="toggle-btn" id="toggle-btn">☰ </button>
+        {% endif %}
+    </div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <button class="close-sidebar" id="close-btn">✖</button>
+    <div class="profile">
+        <img src="/static/image/account.png" alt="Profile Avatar">
+        <span class="phone-number" id="phone-number">Phone Number</span>
+    </div>
+    <div class="menu">
+        <!-- Personal Information -->
+        <a href="/personal_info" class="menu-link">
+            <img src="/static/image/personal_info.png" alt="Personal Info Icon" class="menu-icon">
+            Personal Information
+        </a>
+
+        <!-- Loan History -->
+        <a href="/loan_history" class="menu-link">
+            <img src="/static/image/history.png" alt="Loan History Icon" class="menu-icon">
+            Loan History
+        </a>
+
+        <!-- Privacy Policy -->
+        <a href="/privacy_policy" class="menu-link">
+            <img src="/static/image/policy.png" alt="Privacy Policy Icon" class="menu-icon">
+            Privacy Policy
+        </a>
+    </div>
+    <div class="logout">
+        <img src="/static/image/logout.png" alt="Logout Icon" class="menu-icon">
+        Log Out
+    </div>
+</div>
+   
+    <script>
+        // Sidebar toggle functionality
+        const toggleBtn = document.getElementById('toggle-btn');
+        const sidebar = document.getElementById('sidebar');
+        const closeBtn = document.getElementById('close-btn');
+
+        // Open/Close Sidebar
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active'); // Toggle active class
+            toggleBtn.textContent = sidebar.classList.contains('active') ? "✖" : "☰"; // Toggle button text
+        });
+
+        // Close Sidebar
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            toggleBtn.textContent = "☰";
+        });
+
+        // Display phone number dynamically
+        const urlParams = new URLSearchParams(window.location.search);
+        const phone = urlParams.get('phone');
+
+        if (phone) {
+            document.getElementById('phone-number').textContent = `Phone Number: ${phone}`;
+        }
+
+    </script> 
+
+    <div class="container">
+        <h1>Loan Application</h1>
+        <div class="form-container">
+            <form action="#">
+                <label for="loan-amount">Loan Amount *</label>
+                <input type="number" id="loan-amount" placeholder="Enter amount" required>
+
+                <label for="loan-type">Loan Type *</label>
+                <select id="loan-type" required>
+                    <option value="" disabled selected>Select loan type</option>
+                    <option value="personal">Personal Loan</option>
+                    <option value="business">Business Loan</option>
+                    <option value="mortgage">Student Loan</option>
+                </select>
+
+                <label for="loan-term">Loan Term *</label>
+                <select id="loan-term" required>
+                    <option value="" disabled selected>Select loan term</option>
+                    <option value="1_week">1 Week</option>
+                    <option value="1_month">1 Month</option>
+                    <option value="3_months">3 Months</option>
+                    <option value="6_months">6 Months</option>
+                    <option value="12_months">12 Months</option>
+                    <option value="24_months">24 Months</option>
+                </select>
+
+                <label for="interest-rate">Interest rate</label>
+                <input type="text" id="interest-rate" value="20%" readonly>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="back-button-container">
+        <a href="/apply" class="back-btn">Back</a>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>SMART <span class="highlight">LOANS</span>, SIMPLE <span class="highlight">SOLUTIONS</span></p>
+            <p>&copy; 2024 Creddito. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loanTermSelect = document.getElementById("loan-term");
+            const borrowDateField = document.createElement("p");
+            const repaymentDateField = document.createElement("p");
+    
+            // Create fields for borrow date and repayment date
+            borrowDateField.id = "borrow-date";
+            borrowDateField.style.marginTop = "15px";
+            borrowDateField.style.fontWeight = "bold";
+    
+            repaymentDateField.id = "repayment-date";
+            repaymentDateField.style.marginTop = "15px";
+            repaymentDateField.style.fontWeight = "bold";
+    
+            // Append the borrow date and repayment date fields just below the loan term select
+            loanTermSelect.parentNode.appendChild(borrowDateField);
+            loanTermSelect.parentNode.appendChild(repaymentDateField);
+    
+            // Set the borrow date to the current date
+            const currentDate = new Date();
+            const formattedBorrowDate = currentDate.toISOString().split("T")[0];
+            borrowDateField.textContent = `Borrow Date: ${formattedBorrowDate}`;
+    
+            loanTermSelect.addEventListener("change", function () {
+                const loanTermValue = loanTermSelect.value; // Get the selected loan term
+                const repaymentDate = new Date(currentDate); // Start with the borrow date
+    
+                if (loanTermValue === "1_week") {
+                    // Add 7 days for a 1-week loan term
+                    repaymentDate.setDate(repaymentDate.getDate() + 7);
+                } else if (!isNaN(parseInt(loanTermValue))) {
+                    // Add months for other terms
+                    repaymentDate.setMonth(repaymentDate.getMonth() + parseInt(loanTermValue));
+                } else {
+                    repaymentDateField.textContent = ""; // Clear the text if no term is selected
+                    return;
+                }
+    
+                // Format the repayment date to YYYY-MM-DD
+                const formattedRepaymentDate = repaymentDate.toISOString().split("T")[0];
+    
+                // Update the repayment date field
+                repaymentDateField.textContent = `Repayment Date: ${formattedRepaymentDate}`;
+            });
+    
+            // Form submission logic
+            const form = document.querySelector("form");
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+    
+                // Retrieve user input values
+                const loanAmount = document.getElementById("loan-amount").value;
+                const loanType = document.getElementById("loan-type").value;
+                const loanTermValue = loanTermSelect.value;
+    
+                if (!loanAmount || !loanType || !loanTermValue) {
+                    alert("Please fill all required fields.");
+                    return;
+                }
+    
+                const interestRate = 0.2; // 20% fixed interest
+                const totalWithInterest = (loanAmount * (1 + interestRate)).toFixed(2);
+    
+                const repaymentDate = new Date(currentDate);
+    
+                if (loanTermValue === "1_week") {
+                    repaymentDate.setDate(repaymentDate.getDate() + 7); // Add 7 days for 1-week term
+                } else {
+                    repaymentDate.setMonth(repaymentDate.getMonth() + parseInt(loanTermValue)); // Add months
+                }
+    
+                const loanDetails = {
+                    loanAmount: loanAmount,
+                    borrowDate: formattedBorrowDate,
+                    totalWithInterest: totalWithInterest,
+                    repaymentDate: repaymentDate.toISOString().split("T")[0],
+                };
+    
+                localStorage.setItem("loanDetails", JSON.stringify(loanDetails));
+                window.location.href = "status.html";
+            });
+        });
+    </script>
+    
+    
+</body>
+</html>
